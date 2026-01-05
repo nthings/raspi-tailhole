@@ -12,8 +12,8 @@ sudo apt install -y \
 
 # Install go
 echo "Installing go"
-curl -sL https://raw.githubusercontent.com/rsgarciae/raspi-tailhole/main/bin/install_go.sh | bash
+curl -sL https://raw.githubusercontent.com/nthings/raspi-tailhole/refs/heads/patch-1/bin/install_go.sh | bash
 
 # Install docker
 echo "Installing docker"
-curl -sL https://raw.githubusercontent.com/rsgarciae/raspi-tailhole/main/bin/install_docker.sh | bash
+curl -sL https://raw.githubusercontent.com/nthings/raspi-tailhole/refs/heads/patch-1/bin/install_docker.sh | bash

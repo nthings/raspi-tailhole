@@ -6,7 +6,7 @@ echo "#             Installing Docker           #"
 echo "###########################################"
 
 # Get ARCH directly from the script output
-ARCH=$(curl -sL https://raw.githubusercontent.com/rsgarciae/raspi-tailhole/main/bin/get_arch.sh | bash)
+ARCH=$(curl -sL https://raw.githubusercontent.com/nthings/raspi-tailhole/refs/heads/patch-1/bin/get_arch.sh | bash)
 
 echo "Detected architecture: $ARCH"
 

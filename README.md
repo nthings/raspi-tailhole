@@ -33,7 +33,7 @@ Add [sample_acl.json](sample_acl.json) to tailscale acls, to allow auto approve 
 To configure your raspberry pi to use tailscale run the following command.
 
 ```bash
-curl -sL https://raw.githubusercontent.com/rsgarciae/raspi-tailhole/main/bin/start.sh | bash -s -- NETWORK_RANGE=<REPLACEME_WITH_YOUR_SUBNET_RANGE>
+curl -sL https://raw.githubusercontent.com/nthings/raspi-tailhole/refs/heads/patch-1/bin/start.sh | bash -s -- NETWORK_RANGE=<REPLACEME_WITH_YOUR_SUBNET_RANGE>
 ```
 this will
 

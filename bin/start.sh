@@ -22,20 +22,20 @@ echo "Using network CIDR: $NETWORK_RANGE"
 export NETWORK_RANGE
 
 # Enable VNC service
-curl -sL https://raw.githubusercontent.com/rsgarciae/raspi-tailhole/main/bin/enable_vnc.sh | bash
+curl -sL https://raw.githubusercontent.com/nthings/raspi-tailhole/refs/heads/patch-1/bin/enable_vnc.sh | bash
 
 # Set static ip 
-curl -sL https://raw.githubusercontent.com/rsgarciae/raspi-tailhole/main/bin/set_static_ip.sh | bash
+curl -sL https://raw.githubusercontent.com/nthings/raspi-tailhole/refs/heads/patch-1/bin/set_static_ip.sh | bash
 
 # Enable ip forwarding 
-curl -sL https://raw.githubusercontent.com/rsgarciae/raspi-tailhole/main/bin/enable_ip_forwarding.sh | bash
+curl -sL https://raw.githubusercontent.com/nthings/raspi-tailhole/refs/heads/patch-1/bin/enable_ip_forwarding.sh | bash
 
 # Install additional dependencies
 echo "Installing additional dependencies"
-curl -sL https://raw.githubusercontent.com/rsgarciae/raspi-tailhole/main/bin/install_packages.sh | bash
+curl -sL https://raw.githubusercontent.com/nthings/raspi-tailhole/refs/heads/patch-1/bin/install_packages.sh | bash
 
 # Download refresh_tailscale script
 sudo mkdir -p /var/opt
 echo "Download refresh tailscale script"
-sudo curl -sL https://raw.githubusercontent.com/rsgarciae/raspi-tailhole/main/bin/refresh_tailscale.sh -o /var/opt/refresh_tailscale.sh && sudo chmod +x /var/opt/refresh_tailscale.sh
+sudo curl -sL https://raw.githubusercontent.com/nthings/raspi-tailhole/refs/heads/patch-1/bin/refresh_tailscale.sh -o /var/opt/refresh_tailscale.sh && sudo chmod +x /var/opt/refresh_tailscale.sh
 bash /var/opt/refresh_tailscale.sh "$NETWORK_RANGE"
