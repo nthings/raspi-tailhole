@@ -5,18 +5,19 @@ echo "###########################################"
 echo "#             Installing Go               #"
 echo "###########################################"
 
-# Get ARCH directly from the script output
-ARCH=$(curl -sL https://raw.githubusercontent.com/nthings/raspi-tailhole/refs/heads/patch-1/bin/get_arch.sh | bash)
+# Get ARCH from the local script
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+ARCH=$(bash "$SCRIPT_DIR/get_arch.sh")
 
 echo "Detected architecture: $ARCH"
 
 #setting up go
 echo "Setting up go..."
-if [[ "$ARCH" == "x86_64" ]]; then
+if [[ "$ARCH" == "amd64" ]]; then
     GO_TARBALL="go1.23.0.linux-amd64.tar.gz"
-elif [[ "$ARCH" == "aarch64" || "$ARCH" == "arm64" ]]; then
+elif [[ "$ARCH" == "arm64" ]]; then
     GO_TARBALL="go1.23.0.linux-arm64.tar.gz"
-elif [[ "$ARCH" == "armv6l" || "$ARCH" == "armv7l" ]]; then
+elif [[ "$ARCH" == "armhf" ]]; then
     GO_TARBALL="go1.23.0.linux-armv6l.tar.gz"
 else
     echo "Unsupported architecture: $ARCH"
