@@ -5,11 +5,22 @@ echo "###########################################"
 echo "#             Installing Go               #"
 echo "###########################################"
 
-# Get ARCH from the local script
+# Get the directory where this script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 ARCH=$(bash "$SCRIPT_DIR/get_arch.sh")
 
 echo "Detected architecture: $ARCH"
+
+# Check if Go is already installed (check both in PATH and standard location)
+if command -v go &> /dev/null || [ -x "/usr/local/go/bin/go" ]; then
+    echo "Go is already installed. Version:"
+    if command -v go &> /dev/null; then
+        go version
+    else
+        /usr/local/go/bin/go version
+    fi
+    exit 0
+fi
 
 #setting up go
 echo "Setting up go..."

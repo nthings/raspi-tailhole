@@ -5,11 +5,11 @@ echo "###########################################"
 echo "#         Set static IP                   #"
 echo "###########################################"
 
-# Find the first active interface with an IP address (excluding 'lo')
+# Find the first active interface with an IP address (excluding 'lo' and virtual interfaces)
 ip_found=false
 for iface in $(ls /sys/class/net/); do
-  # Skip loopback interface
-  if [ "$iface" != "lo" ]; then
+  # Skip loopback, docker, veth, and other virtual interfaces
+  if [ "$iface" != "lo" ] && [[ ! "$iface" =~ ^(docker|veth|br-|virbr) ]]; then
     ip=$(ifconfig $iface | grep 'inet ' | awk '{print $2}')
     if [ -n "$ip" ]; then
       ip_found=true
@@ -28,9 +28,9 @@ fi
 echo "Found IPv4 address on interface: $interface_found"
 
 # Get the connection name associated with the found interface
-connection_name=$(nmcli connection show | grep -i "$interface_found" | while read -r line; do
-  echo "$line" | sed 's/^\([[:space:]]*\)\([A-Za-z0-9[:space:]]*\)[[:space:]]\{2,\}.*/\2/'
-done)
+# nmcli output format: NAME  UUID  TYPE  DEVICE
+# We need to extract just the NAME field (first column)
+connection_name=$(nmcli -t -f NAME,DEVICE connection show | grep ":$interface_found$" | cut -d':' -f1)
 
 # If connection name is not found, exit the script
 if [ -z "$connection_name" ]; then
@@ -59,6 +59,27 @@ if [ -z "$dns_ip" ]; then
 fi
 
 echo "Found DNS IP: $dns_ip"
+
+# Check if the connection is already configured with manual IP
+current_method=$(nmcli -t -f ipv4.method connection show "$connection_name" | cut -d':' -f2)
+if [ "$current_method" = "manual" ]; then
+    current_ip=$(nmcli -t -f ipv4.addresses connection show "$connection_name" | cut -d':' -f2 | cut -d'/' -f1)
+    current_gateway=$(nmcli -t -f ipv4.gateway connection show "$connection_name" | cut -d':' -f2)
+    current_dns=$(nmcli -t -f ipv4.dns connection show "$connection_name" | cut -d':' -f2)
+    
+    if [ "$current_ip" = "$ip" ] && [ "$current_gateway" = "$gateway_ip" ] && [ "$current_dns" = "$dns_ip" ]; then
+        echo "Static IP configuration already applied:"
+        echo "--------------------------------------------"
+        echo "Static IP: $ip"
+        echo "Gateway IP: $gateway_ip"
+        echo "DNS IP: $dns_ip"
+        echo "--------------------------------------------"
+        echo "Skipping configuration."
+        echo "###########################################"
+        echo "-------------------------------------------"
+        exit 0
+    fi
+fi
 
 # Step 5: Set the static IP, gateway, and DNS using nmcli
 echo "Configuring static IP..."

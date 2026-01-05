@@ -5,10 +5,18 @@ echo "###########################################"
 echo "#             Installing Docker           #"
 echo "###########################################"
 
-# Get ARCH directly from the script output
-ARCH=$(curl -sL https://raw.githubusercontent.com/nthings/raspi-tailhole/refs/heads/patch-1/bin/get_arch.sh | bash)
+# Get the directory where this script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+ARCH=$(bash "$SCRIPT_DIR/get_arch.sh")
 
 echo "Detected architecture: $ARCH"
+
+# Check if Docker is already installed
+if command -v docker &> /dev/null; then
+    echo "Docker is already installed. Version:"
+    docker --version
+    exit 0
+fi
 
 # Install Docker dependencies
 echo "Installing Docker dependencies"
@@ -23,6 +31,7 @@ sudo apt install -y \
 
 # Add Docker's official GPG key
 echo "Adding Docker's GPG key..."
+sudo rm -f /usr/share/keyrings/docker-archive-keyring.gpg
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
 # Add Docker's official repository based on architecture

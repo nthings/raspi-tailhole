@@ -17,6 +17,10 @@ else
 fi
 
 echo "Using network range: $NETWORK_RANGE"
+
+# Ensure Go is in PATH
+export PATH=$PATH:/usr/local/go/bin
+
 # Generate a new Tailscale auth key
 TS_AUTHKEY=$(go run tailscale.com/cmd/get-authkey@latest -reusable -ephemeral -preauth -tags tag:exitnode)
 

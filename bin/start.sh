@@ -4,8 +4,7 @@ set -e
 : ${TS_API_CLIENT_ID:?"ERROR: TS_API_CLIENT_ID environment variable is required Set with: export TS_API_CLIENT_ID=your_client_id"}
 : ${TS_API_CLIENT_SECRET:?"ERROR: TS_API_CLIENT_SECRET environment variable is required . Set with: export TS_API_CLIENT_SECRET=your_client_secret"}
 
-# Parse command line arguments
-NETWORK_RANGE=""
+# Parse command line arguments (override environment variable if provided)
 for arg in "$@"; do
   case $arg in
     NETWORK_RANGE=*)
@@ -21,21 +20,28 @@ done
 echo "Using network CIDR: $NETWORK_RANGE"
 export NETWORK_RANGE
 
+# Get the directory where this script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
 # Enable VNC service
-curl -sL https://raw.githubusercontent.com/nthings/raspi-tailhole/refs/heads/patch-1/bin/enable_vnc.sh | bash
+bash "$SCRIPT_DIR/enable_vnc.sh"
 
 # Set static ip 
-curl -sL https://raw.githubusercontent.com/nthings/raspi-tailhole/refs/heads/patch-1/bin/set_static_ip.sh | bash
+bash "$SCRIPT_DIR/set_static_ip.sh"
 
 # Enable ip forwarding 
-curl -sL https://raw.githubusercontent.com/nthings/raspi-tailhole/refs/heads/patch-1/bin/enable_ip_forwarding.sh | bash
+bash "$SCRIPT_DIR/enable_ip_forwarding.sh"
 
 # Install additional dependencies
 echo "Installing additional dependencies"
-curl -sL https://raw.githubusercontent.com/nthings/raspi-tailhole/refs/heads/patch-1/bin/install_packages.sh | bash
+bash "$SCRIPT_DIR/install_packages.sh"
 
-# Download refresh_tailscale script
+# Copy refresh_tailscale script to /var/opt
+echo "###########################################"
+echo "#         Refresh tailscale script        #"
+echo "###########################################"
 sudo mkdir -p /var/opt
-echo "Download refresh tailscale script"
-sudo curl -sL https://raw.githubusercontent.com/nthings/raspi-tailhole/refs/heads/patch-1/bin/refresh_tailscale.sh -o /var/opt/refresh_tailscale.sh && sudo chmod +x /var/opt/refresh_tailscale.sh
+echo "Copying refresh tailscale script"
+sudo cp "$SCRIPT_DIR/refresh_tailscale.sh" /var/opt/refresh_tailscale.sh
+sudo chmod +x /var/opt/refresh_tailscale.sh
 bash /var/opt/refresh_tailscale.sh "$NETWORK_RANGE"

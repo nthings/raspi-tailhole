@@ -30,22 +30,39 @@ source ~/.profile
 Add [sample_acl.json](sample_acl.json) to tailscale acls, to allow auto approve subnet routes and exit nodes
 
 ## Tailscale initial configuration
-To configure your raspberry pi to use tailscale run the following command.
+To configure your raspberry pi to use tailscale, first clone the repository and run the setup script.
 
 ```bash
-curl -sL https://raw.githubusercontent.com/nthings/raspi-tailhole/refs/heads/patch-1/bin/start.sh | bash -s -- NETWORK_RANGE=<REPLACEME_WITH_YOUR_SUBNET_RANGE>
+# Clone the repository
+git clone https://github.com/nthings/raspi-tailhole.git
+cd raspi-tailhole
+
+# Run the setup script with your network range
+NETWORK_RANGE="<REPLACEME_WITH_YOUR_SUBNET_RANGE>" TS_API_CLIENT_ID="$TS_API_CLIENT_ID" TS_API_CLIENT_SECRET="$TS_API_CLIENT_SECRET" ./bin/start.sh
 ```
-this will
 
- 1.- Enable vnc on your raspberry pi.
+Alternatively, if you've already set the environment variables in your profile:
 
- 2.- Set your raspberry static ip using the current ip of your device.
+```bash
+# Clone the repository
+git clone https://github.com/nthings/raspi-tailhole.git
+cd raspi-tailhole
 
- 3.- Enable ip forwarding.
+# Run the setup script (environment variables must be set)
+NETWORK_RANGE="<REPLACEME_WITH_YOUR_SUBNET_RANGE>" ./bin/start.sh
+```
 
- 4.- Install necesary dependencies(packages, docker and go)
+This will:
 
- 5.- Use Oauth to automate auth token generation, automatically it will create a new docker container with a fresh token, and this will be executed each 90 days (when token expires).
+ 1.- Enable VNC on your raspberry pi.
+
+ 2.- Set your raspberry static IP using the current IP of your device.
+
+ 3.- Enable IP forwarding.
+
+ 4.- Install necessary dependencies (packages, docker and go).
+
+ 5.- Use OAuth to automate auth token generation, automatically it will create a new docker container with a fresh token, and this will be executed each 90 days (when token expires).
 
 
 ## Pi-Hole initial configuration

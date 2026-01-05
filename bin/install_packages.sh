@@ -10,10 +10,13 @@ sudo apt install -y \
     at \
     sudo
 
+# Get the directory where this script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
 # Install go
 echo "Installing go"
-curl -sL https://raw.githubusercontent.com/nthings/raspi-tailhole/refs/heads/patch-1/bin/install_go.sh | bash
+bash "$SCRIPT_DIR/install_go.sh"
 
 # Install docker
 echo "Installing docker"
-curl -sL https://raw.githubusercontent.com/nthings/raspi-tailhole/refs/heads/patch-1/bin/install_docker.sh | bash
+bash "$SCRIPT_DIR/install_docker.sh"
