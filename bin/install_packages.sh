@@ -17,6 +17,12 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 echo "Installing go"
 bash "$SCRIPT_DIR/install_go.sh"
 
-# Install docker
-echo "Installing docker"
-bash "$SCRIPT_DIR/install_docker.sh"
+# Check if we already have docker group access
+if ! groups | grep -q docker; then
+    echo "Installing docker"
+    # Install Docker
+    bash "$SCRIPT_DIR/install_docker.sh"
+    
+    # Re-execute this script with docker group
+    exec sg docker "$0"
+fi
