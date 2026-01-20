@@ -44,7 +44,7 @@ docker run -d \
     --env TS_EXTRA_ARGS="--advertise-exit-node"  \
     --env TS_ROUTES="$NETWORK_RANGE" \
     --restart unless-stopped \
-    tailscale/tailscale:v1.74.1
+    tailscale/tailscale:stable
 
 echo "Tailscale container refreshed successfully."
 echo "/var/opt/refresh_tailscale.sh \"$NETWORK_RANGE\"" | at now + 90 days
