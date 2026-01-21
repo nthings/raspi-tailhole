@@ -22,7 +22,7 @@ echo "Using network range: $NETWORK_RANGE"
 export PATH=$PATH:/usr/local/go/bin
 
 # Generate a new Tailscale auth key
-TS_AUTHKEY=$(go run tailscale.com/cmd/get-authkey@latest -reusable -ephemeral -preauth -tags tag:exitnode)
+TS_AUTHKEY=$(go run tailscale.com/cmd/get-authkey@latest -reusable -preauth -tags tag:exitnode)
 
 # Stop and remove the existing container if it exists
 if docker ps -a --format '{{.Names}}' | grep 'tailscale'; then
